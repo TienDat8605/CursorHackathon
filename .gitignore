@@ -214,3 +214,10 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+todo.txt
+plan.md 
+update.md
+__pycache__
+.serena/
+.python-version
