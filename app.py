@@ -583,19 +583,50 @@ def create_simulation_video(
         ax.set_xlabel('Longitude')
         ax.set_ylabel('Latitude')
         
-        # Add depth info and legend
-        flooded_area = np.sum(depth > 0.001) * (terrain.resolution[0] * terrain.resolution[1]) / 1e6
-        info_text = f'Max Depth: {np.max(depth):.2f}m\nFlooded: {flooded_area:.1f} km²'
-        ax.text(0.02, 0.98, info_text,
-                transform=ax.transAxes, fontsize=10, verticalalignment='top',
-                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+        # Add color legend with actual colors matching the depth levels
+        from matplotlib.patches import Rectangle
+        legend_items = [
+            ('0-0.3m', (0.70, 0.85, 1.00)),      # Very light blue
+            ('0.3-0.5m', (0.40, 0.70, 1.00)),    # Light blue
+            ('0.5-1m', (0.20, 0.60, 1.00)),      # Medium blue
+            ('1-2m', (0.00, 0.40, 0.80)),        # Dark blue
+            ('>2m', (0.00, 0.20, 0.40))          # Deep navy
+        ]
         
-        # Add color legend for depth levels
-        legend_text = 'Depth:\n0-0.3m\n0.3-0.5m\n0.5-1m\n1-2m\n>2m'
-        ax.text(0.98, 0.98, legend_text,
-                transform=ax.transAxes, fontsize=8, verticalalignment='top', horizontalalignment='right',
-                bbox=dict(boxstyle='round', facecolor='white', alpha=0.8),
-                family='monospace')
+        # Create legend box
+        legend_y_start = 0.98
+        legend_x = 0.98
+        box_height = 0.03
+        box_width = 0.025
+        spacing = 0.04
+        
+        # Background box for legend
+        legend_bg = Rectangle((legend_x - 0.12, legend_y_start - len(legend_items) * spacing - 0.02),
+                             0.13, len(legend_items) * spacing + 0.03,
+                             transform=ax.transAxes, facecolor='white', 
+                             edgecolor='black', alpha=0.85, linewidth=1)
+        ax.add_patch(legend_bg)
+        
+        # Add title
+        ax.text(legend_x - 0.06, legend_y_start - 0.01, 'Water Depth',
+                transform=ax.transAxes, fontsize=9, fontweight='bold',
+                verticalalignment='top', horizontalalignment='center')
+        
+        # Add each depth level with colored box
+        for i, (label, color) in enumerate(legend_items):
+            y_pos = legend_y_start - (i + 1) * spacing
+            
+            # Color box
+            rect = Rectangle((legend_x - 0.11, y_pos - box_height/2),
+                           box_width, box_height,
+                           transform=ax.transAxes, facecolor=color,
+                           edgecolor='black', linewidth=0.5)
+            ax.add_patch(rect)
+            
+            # Label text
+            ax.text(legend_x - 0.08, y_pos, label,
+                   transform=ax.transAxes, fontsize=8,
+                   verticalalignment='center', horizontalalignment='left')
         
         # Convert to PIL Image
         buf = io.BytesIO()
@@ -682,18 +713,12 @@ def display_metrics(result: SimulationResult, frame_idx: int):
     
     stats = result.stats_history[min(frame_idx, len(result.stats_history) - 1)]
     
-    col1, col2, col3, col4 = st.columns(4)
+    col1, col3, col4 = st.columns(3)
     
     with col1:
         st.metric(
             label="⏱️ Time",
             value=f"{stats['time']:.1f} hrs"
-        )
-    
-    with col2:
-        st.metric(
-            label="💧 Max Depth",
-            value=f"{stats['max_depth']:.2f} m"
         )
     
     with col3:
