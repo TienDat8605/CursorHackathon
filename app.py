@@ -71,14 +71,24 @@ st.markdown("""
     
     /* Sidebar styling */
     [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+        background: #000000 !important;
     }
     [data-testid="stSidebar"] .stMarkdown h2 {
-        color: #1e40af;
+        color: #ffffff !important;
         font-size: 1.1rem;
         font-weight: 600;
         border-bottom: 2px solid #3b82f6;
         padding-bottom: 0.5rem;
+    }
+    [data-testid="stSidebar"] * {
+        color: #ffffff !important;
+    }
+    [data-testid="stSidebar"] .stMarkdown,
+    [data-testid="stSidebar"] label,
+    [data-testid="stSidebar"] p,
+    [data-testid="stSidebar"] span,
+    [data-testid="stSidebar"] div {
+        color: #ffffff !important;
     }
     
     /* Metric cards */
