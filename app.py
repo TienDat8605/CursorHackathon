@@ -606,11 +606,7 @@ def create_simulation_video(
                              transform=ax.transAxes, facecolor='white', 
                              edgecolor='black', alpha=0.85, linewidth=1)
         ax.add_patch(legend_bg)
-        
-        # Add title
-        ax.text(legend_x - 0.06, legend_y_start - 0.01, 'Water Depth',
-                transform=ax.transAxes, fontsize=9, fontweight='bold',
-                verticalalignment='top', horizontalalignment='center')
+
         
         # Add each depth level with colored box
         for i, (label, color) in enumerate(legend_items):

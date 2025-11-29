@@ -1,3 +1,5 @@
-# CursorHackathon
+# FloodSim Sandbox 🌊
 
-This is the code for cursor hackathon
+**Interactive Flood Simulation & Visualization Platform**
+
+FloodSim Sandbox is a physics-based flood simulation tool that uses real-world Digital Elevation Models (DEM) to predict and visualize flood propagation. Built with Streamlit, it features two simulation backends: a fast NumPy-based diffusion solver and a realistic shallow water equations model using Manning's friction. The application simulates rainfall-driven flooding with configurable parameters including rainfall intensity, soil infiltration rates, and edge drainage. Results are presented through interactive maps with animated flood progression, depth contours, and comprehensive water balance analytics. Ideal for flood risk assessment, urban planning, and educational purposes in hydrology and environmental science.
