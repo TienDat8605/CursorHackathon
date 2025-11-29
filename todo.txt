@@ -1,0 +1,107 @@
+FloodSim Sandbox - Project Todo List
+=====================================
+
+[x] Set up Python environment
+    - [x] Create virtual environment (venv/)
+    - [x] Install dependencies: numpy, matplotlib, rasterio, streamlit, folium, streamlit-folium, scipy, Pillow, branca
+    - [x] Add requirements.txt with versions
+
+[x] Prepare DEM data
+    - [x] Verified existing GeoTIFFs in ./data (daklak.tif, lamdong.tif, output.tin.tif)
+    - [x] Support for automatic downsampling for fast iteration
+    - [x] CRS and elevation units handling (EPSG:4326 geographic coords supported)
+
+[x] Implement terrain_loader.py
+    - [x] Load DEM from GeoTIFF using rasterio
+    - [x] Return elevation array, bounds, transform, and CRS
+    - [x] Normalize elevations and handle NaNs / nodata
+    - [x] Add optional downsampling for large DEMs
+    - [x] Hillshade + colormap visualization for terrain
+
+[x] Implement simulation_core.py
+    - [x] Define data structures: TerrainData, SimulationParams, SimulationState, SimulationResult
+    - [x] Implement rainfall application (uniform intensity over domain)
+    - [x] Implement local flow update (4-neighbor diffusion-like scheme)
+    - [x] Enforce numerical safety (no negative depths, per-step movement cap)
+    - [x] Run N timesteps and return depth fields over time
+    - [x] Support dam/barrier creation by elevation modification
+
+[x] Implement Streamlit app.py
+    - [x] File uploader for DEM (with fallback to bundled samples in ./data)
+    - [x] Controls: rainfall intensity, duration, diffusion coefficient, timestep
+    - [x] "Run Simulation" button with progress bar
+    - [x] Display base elevation map + water depth overlay
+
+[x] Add visualization & interactivity
+    - [x] Integrate folium for map display
+    - [x] Overlay elevation as base layer and water depth as semi-transparent blue overlay
+    - [x] Time-step slider to scrub through simulation frames
+    - [x] Show metrics (max depth, flooded area, total volume)
+    - [x] Statistics charts (depth and area over time)
+
+[x] Export options
+    - [x] Export flood map as PNG
+    - [x] Export depth data as CSV
+
+=====================================
+Stability & Realism Improvements (v2.0)
+=====================================
+
+[x] Add infiltration + edge/outlet drainage
+    - [x] Use non-zero default infiltration_rate (e.g., 5 mm/hr)
+    - [x] Implement edge-drain model: remove water at boundary cells
+    - [x] Add optional river outlet mask for aggressive drainage
+
+[x] Scale diffusion-based flow by timestep and DEM resolution
+    - [x] Reinterpret diffusion_coef as physical coefficient
+    - [x] Compute effective_k = base_k * timestep / (dx²) in compute_flow
+    - [x] Update docstrings explaining flow parameters
+
+[x] Add mass-balance diagnostics and convergence detection
+    - [x] Track cumulative rainfall, infiltration, drainage, evaporation
+    - [x] Log warning if mass balance drifts beyond tolerance
+    - [x] Add optional early-stopping when max_depth stabilizes
+
+[x] Fix dam reset logic to preserve per-cell dam heights
+    - [x] Store dam_heights array instead of constant +10m
+    - [x] Restore correct elevations in reset()
+
+[x] Add pluggable backend architecture
+    - [x] Define BaseFloodModel interface
+    - [x] Keep NumPy solver as "Fast (approximate)" backend
+    - [x] Implement working Realistic solver with Manning's equation
+    - [x] Add solver selection control in app.py
+
+[x] UI/UX improvements
+    - [x] Add clear unit labels (mm/hr, hours)
+    - [x] Add advanced settings panel with edge drainage controls
+    - [x] Show mass balance and convergence info in results
+
+[x] Water visualization improvements (v2.1)
+    - [x] Discrete color levels: 0-0.3m, 0.3-0.5m, 0.5-1m, 1-2m, >2m
+    - [x] Water contour view with labeled isolines
+    - [x] Visual legend for depth colors
+    - [x] Toggle between discrete/contour/continuous modes
+
+[x] Video/Animation improvements (v2.1)
+    - [x] Display simulation video inline (not just download)
+    - [x] Improved video generation with depth legend
+
+[ ] Future enhancements (post-hackathon)
+    - [ ] Enable drawing dam lines/polygons directly on map
+    - [ ] Add 3D terrain visualization with PyVista
+    - [ ] Real rainfall data integration from weather APIs
+    - [ ] GPU acceleration with CuPy
+    - [ ] Manning's equation for more realistic flow
+    - [ ] Full LISFLOOD-FP/ANUGA integration
+
+=====================================
+PROJECT UPDATED FOR STABILITY! 
+
+To run the app:
+  cd /home/dat/HCMUS/cursor-hackathon
+  source venv/bin/activate
+  streamlit run app.py
+
+App runs at: http://localhost:8501
+
